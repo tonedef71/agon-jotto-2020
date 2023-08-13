@@ -50,3 +50,5 @@ If the mystery 5-letter word is "RADAR"...
 Continue submitting guesses until you correctly solve the mystery word or you run out of allowed guess attempts.
 
 ## Demo Playthrough
+https://github.com/tonedef71/agon-jotto-2020/assets/3978924/d52c57b5-d3ea-4299-a57d-22dd7d7e499f
+
