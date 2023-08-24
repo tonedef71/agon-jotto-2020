@@ -1,4 +1,5 @@
-# agon-jotto-2020
+# agon-jotto-2020 ![JOTTO-2020_icon](https://github.com/tonedef71/agon-jotto-2020/assets/3978924/348a82d1-9edf-4524-9aa8-5ea2ac38de22)
+
 
 Jotto 2020: a modern variant of the classic game of [*Jotto*](https://en.wikipedia.org/wiki/Jotto) for AgonLight and BBC BASIC SDL written in [BBC BASIC v3](https://en.wikipedia.org/wiki/BBC_BASIC)
 
