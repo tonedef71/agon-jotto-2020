@@ -1,7 +1,7 @@
 10000 REM :::::::::::::::::::::::::::::::::::::::::::::
 10010 REM :: JOTTO 2020 FOR AgonLight (BBC BASIC v3) ::
 10020 REM :::::::::::::::::::::::::::::::::::::::::::::
-10030 REM :: 20231103: V1.1 - Use new VDP MODEs      ::
+10030 REM :: 20231103: V1.1.1 - Use new VDP MODEs    ::
 10040 REM :::::::::::::::::::::::::::::::::::::::::::::
 10050 REM :: JOTTO 2020 was originally developed as  ::
 10060 REM :: an entry for MuleSoft Hackathon 2020.   ::
@@ -755,7 +755,7 @@
 17540   IF ((c$ = CHR$(127) OR c$ = CHR$(8)) AND LEN(r$) > 0) THEN r$ = LEFT$(r$, LEN(r$) - 1):PRINT CHR$(127);
 17550   IF (c$ >= "0" AND c$ <= "9") AND (LEN(r$) < maxDigitCount%) THEN r$ = r$ + c$:PRINT c$;
 17560 UNTIL c$ = CHR$(13) AND LEN(r$) <= maxDigitCount%
-17570 IF LEN(r$) < 1 THEN r$ = STR$(defaultValue%)
+17570 IF LEN(r$) < 1 THEN r$ = STR$(defaultValue%):PRINT r$
 17580 PROC_HIDE_CURSOR
 17590 := VAL(r$)
 17600 :
