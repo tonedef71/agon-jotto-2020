@@ -5,7 +5,7 @@ Jotto 2020: a modern variant of the classic game of [*Jotto*](https://en.wikiped
 
 * Jotto 2020 cleverly combines the game play of [Jotto](https://en.wikipedia.org/wiki/Jotto) with [Mastermind](https://en.wikipedia.org/wiki/Mastermind_(board_game)) and adds the option to guess mystery words of lengths from 2 to 12 letters.
 * Jotto 2020 debuted online in November 2020 as [my contest submission](https://dev.to/tonedef71/everyday-is-an-api-day-with-jotto-5eh8) for the [MuleSoft Hackathon 2020](https://blogs.mulesoft.com/dev-guides/announcing-the-mulesoft-hackathon-2020-winners/)
-* Jotto 2020 may be played on an [AgonLight retro-computer](https://www.olimex.com/Products/Retro-Computers/AgonLight2/open-source-hardware), the [AgonLight Emulator](https://github.com/astralaster/agon-light-emulator/releases), or the [BBC BASIC SDL](http://www.bbcbasic.co.uk/bbcsdl/).
+* Jotto 2020 may be played on an [AgonLight retro-computer](https://www.olimex.com/Products/Retro-Computers/AgonLight2/open-source-hardware), the [AgonLight Emulator](https://github.com/tomm/fab-agon-emulator/releases), or the [BBC BASIC SDL](http://www.bbcbasic.co.uk/bbcsdl/).
 
 ## Display
 Jotto 2020 supports multiple display modes on the AgonLight, but looks best on a mode that supports a palette of 64 colors and minimum screen dimensions of 40 columns by 22 rows.
