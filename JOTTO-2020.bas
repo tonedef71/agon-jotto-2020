@@ -1,7 +1,7 @@
 10000 REM :::::::::::::::::::::::::::::::::::::::::::::
 10010 REM :: JOTTO 2020 FOR AgonLight (BBC BASIC v3) ::
 10020 REM :::::::::::::::::::::::::::::::::::::::::::::
-10030 REM :: 20230813: V1.0 - Initial Release        ::
+10030 REM :: 20231103: V1.1 - Use new VDP MODEs      ::
 10040 REM :::::::::::::::::::::::::::::::::::::::::::::
 10050 REM :: JOTTO 2020 was originally developed as  ::
 10060 REM :: an entry for MuleSoft Hackathon 2020.   ::
@@ -22,8 +22,8 @@
 10210 REM!Embed @dir$+"data/dict12.bin"
 10220 CLEAR
 10230 REPEAT CLS:SY$=FN_TO_UPPER(FN_PROMPT(0,0,"TARGET (A)gon or (B)BC B-SDL:","A")):UNTIL SY$ = "A" OR SY$ = "B"
-10240 IF SY$ = "B" THEN LEFT = 136:RIGHT = 137:DOWN = 138:UP = 139:DL% = 10:MO% = 9:ELSE LEFT = 8:RIGHT = 21:DOWN = 10:UP = 11:DL% = 14:MO% = 2
-10250 IF SY$ = "A" THEN REPEAT CLS:MO$=FN_PROMPT(0,0,"MODE (1,2,3,...):",STR$(MO%)):UNTIL VAL(MO$) > 0:MO% = VAL(MO$)
+10240 IF SY$ = "B" THEN LEFT = 136:RIGHT = 137:DOWN = 138:UP = 139:DL% = 10:MO% = 9:ELSE LEFT = 8:RIGHT = 21:DOWN = 10:UP = 11:DL% = 14:MO% = 13
+10250 IF SY$ = "A" THEN REPEAT CLS:MO$=FN_PROMPT_FOR_NUMBERS(0,0,"MODE (0,3,4,8,9,12,13,...):",STR$(MO%),3):UNTIL VAL(MO$) >= 0:MO% = VAL(MO$)
 10260 MODE MO%
 10270 PROC_SETUP
 10280 ON ERROR PROC_HANDLE_ERROR:REM Handle ESC key
@@ -67,7 +67,7 @@
 10660 REM ::::::::::::::::::::::
 10670 DEF PROC_NEW_GAME
 10680 LOCAL lastPlayedWordIndex%, n%
-10690 REPEAT CLS:PRINT TAB(0,0)CHR$(17)CHR$(WHITE)"Puzzle Size (2 - 12): "CHR$(17)CHR$(YELLOW)"5"CHR$(8);:n%=FN_PROMPT_FOR_NUMBER(5, 2):SIZE% = n%:UNTIL SIZE% >= 2 AND SIZE% <= 12
+10690 REPEAT CLS:PRINT TAB(0,0)CHR$(17)CHR$(WHITE)"Puzzle Size (2 - 12): "CHR$(17)CHR$(YELLOW)"5";:n%=FN_PROMPT_FOR_NUMBER(5, 2):SIZE% = n%:UNTIL SIZE% >= 2 AND SIZE% <= 12
 10700 StrictlyWordGuesses% = FN_STRICTLY_WORD_GUESSES
 10710 PROC_BESTSCORES_READ:MaximumTurns% = FN_COMPUTE_MAXIMUM_TURNS(SIZE%)
 10720 TARGET$ = FN_SELECT_A_MYSTERY_WORD(SIZE%)
@@ -424,7 +424,7 @@
 14230 REM :::::::::::::::::::
 14240 DEF PROC_WELCOME
 14250 LOCAL boxh%, boxw%, c%, cc%, ch$, co%, ex%, perimeter%, t%, t$, ux%, uy%
-14260 boxh% = 20:boxw% = 38:cc% = 0:ex% = FALSE:perimeter% = 2 * (boxw% + boxh% - 2):t% = 2:ux% = (CW% - boxw%) DIV 2:uy% = 0:co% = 0
+14260 boxh% = FN_MIN(CH%, 20):boxw% = FN_MIN(CW%, 40):cc% = 0:ex% = FALSE:perimeter% = 2 * (boxw% + boxh% - 2):t% = 2:ux% = (CW% - boxw%) DIV 2:uy% = 0:co% = 0
 14270 PROC_DEFAULT_COLORS:CLS:PROC_HIDE_CURSOR
 14280 PRINT TAB(0, uy% + 2);
 14290 PROC_CENTER("Welcome to ..."):PRINT:PRINT
@@ -449,7 +449,7 @@
 14480   IF SY$ = "A" THEN c% = INKEY(DL%):PROC_EMPTY_KEYBOARD_BUFFER:ELSE c% = INKEY(TK/DL%)
 14490   IF c% > 0 THEN ex% = TRUE
 14500 UNTIL ex%
-14510 boxh% = 17:boxw% = 38:cc% = 0:ex% = FALSE:perimeter% = 2 * (boxw% + boxh% - 2):t% = 2:ux% = (CW% - boxw%) DIV 2:uy% = 0:co% = 0
+14510 boxh% = FN_MIN(CH%, 17):boxw% = FN_MIN(CW%, 40):cc% = 0:ex% = FALSE:perimeter% = 2 * (boxw% + boxh% - 2):t% = 2:ux% = (CW% - boxw%) DIV 2:uy% = 0:co% = 0
 14520 PROC_DEFAULT_COLORS:CLS
 14530 PRINT TAB(0, uy% + 2);
 14540 PROC_CENTER(CHR$(17)+CHR$(YELLOW)+"Jotto 2020"+CHR$(17)+CHR$(WHITE)+" is a modern variant of"):PRINT
@@ -470,9 +470,9 @@
 14690   cc% = (cc% + 1) MOD perimeter%:IF cc% = 1 THEN co% = (co% + 1) MOD 7 + 1
 14700   PROC_CLOCKWISE_PLOT(cc%, co%, ch%, ux%, uy%, boxw%, boxh%)
 14710   IF SY$ = "A" THEN c% = INKEY(DL%):PROC_EMPTY_KEYBOARD_BUFFER:ELSE c% = INKEY(TK/DL%)
-14720   IF c% > 0 THEN ex% = TRUE
+14720   ex% = (c% > 0)
 14730 UNTIL ex%
-14740 PROC_DEFAULT_COLORS:CLS:boxh% = 21:cc% = 0:ex% = FALSE:perimeter% = 2 * (boxw% + boxh% - 2)
+14740 PROC_DEFAULT_COLORS:CLS:boxh% = FN_MIN(CH%, 21):cc% = 0:ex% = FALSE:perimeter% = 2 * (boxw% + boxh% - 2)
 14750 PRINT TAB(0, uy% + 2);
 14760 PROC_CENTER(FN_RVS(RED,BLACK,"A")+CHR$(17)+CHR$(WHITE)+": Absent from mystery word      "):PRINT:PRINT
 14770 PROC_CENTER(FN_RVS(YELLOW,BLACK,"A")+CHR$(17)+CHR$(WHITE)+": Present BUT improperly located"):PRINT:PRINT
@@ -493,7 +493,7 @@
 14920   cc% = (cc% + 1) MOD perimeter%:IF cc% = 1 THEN co% = (co% + 1) MOD 7 + 1
 14930   PROC_CLOCKWISE_PLOT(cc%, co%, ch%, ux%, uy%, boxw%, boxh%)
 14940   IF SY$ = "A" THEN c% = INKEY(DL%):PROC_EMPTY_KEYBOARD_BUFFER:ELSE c% = INKEY(TK/DL%)
-14950   IF c% > 0 THEN ex% = TRUE
+14950   ex% = (c% > 0)
 14960 UNTIL ex%
 14970 PROC_DEFAULT_COLORS
 14980 ENDPROC
@@ -689,85 +689,85 @@
 16880 DEF FN_RND_INT(lo%, hi%):= (RND(1) * (hi% - lo% + 1)) + lo%
 16890 :
 16900 REM ::::::::::::::::::::::::::::::::
-16910 REM :: Generate A Random Sequence ::
+16910 REM :: Prepend Zeroes To A Number ::
 16920 REM ::::::::::::::::::::::::::::::::
-16930 DEF FN_RND_SEQ(n%)
-16940 LOCAL i%, r$
-16950 R$ = ""
-16960 FOR i% = 1 TO n%
-16970   r$ = r$ + MID$(P$, FN_RND_INT(1, 7), 1)
-16980 NEXT i%
-16990 := r$
-17000 :
-17010 REM ::::::::::::::::::::::::::::::::
-17020 REM :: Prepend Zeroes To A Number ::
-17030 REM ::::::::::::::::::::::::::::::::
-17040 DEF FN_PAD_NUMBER(val%, len%)
-17050 LOCAL s$
-17060 s$ = STR$(val%)
-17070 := STRING$(len% - LEN(s$), "0") + s$
+16930 DEF FN_PAD_NUMBER(val%, len%)
+16940 LOCAL s$
+16950 s$ = STR$(val%)
+16960 := STRING$(len% - LEN(s$), "0") + s$
+16970 :
+16980 REM ::::::::::::::::::::::::::::::::
+16990 REM :: Replace A Char In A String ::
+17000 REM ::::::::::::::::::::::::::::::::
+17010 DEF FN_XSTRING$(text$, pos%, char$)
+17020 := LEFT$(text$, pos% - 1) + char$ + RIGHT$(text$, LEN(text$) - pos%)
+17030 :
+17040 REM ::::::::::::::::::::::
+17050 REM ::   To Uppercase   ::
+17060 REM ::::::::::::::::::::::
+17070 DEF FN_TO_UPPER(ch$):LOCAL ch%:ch% = ASC(ch$):ch$ = CHR$(ch% + 32 * (ch% >= 97 AND ch% <= 122)):=ch$
 17080 :
-17090 REM ::::::::::::::::::::::::::::::::
-17100 REM :: Replace A Char In A String ::
-17110 REM ::::::::::::::::::::::::::::::::
-17120 DEF FN_XSTRING$(text$, pos%, char$)
-17130 := LEFT$(text$, pos% - 1) + char$ + RIGHT$(text$, LEN(text$) - pos%)
-17140 :
-17150 REM ::::::::::::::::::::::
-17160 REM ::   To Uppercase   ::
-17170 REM ::::::::::::::::::::::
-17180 DEF FN_TO_UPPER(ch$):LOCAL ch%:ch% = ASC(ch$):ch$ = CHR$(ch% + 32 * (ch% >= 97 AND ch% <= 122)):=ch$
-17190 :
-17200 REM ::::::::::::::::::::::
-17210 REM ::   To Lowercase   ::
-17220 REM ::::::::::::::::::::::
-17230 DEF FN_TO_LOWER(ch$):LOCAL ch%:ch% = ASC(ch$):ch$ = CHR$(ch% - 32 * (ch% >= 65 AND ch% <= 90)):=ch$
-17240 :
-17250 REM :::::::::::::::::::::::::
-17260 REM :: Prompt For Response ::
-17270 REM :::::::::::::::::::::::::
-17280 DEF FN_PROMPT(x%, y%, text$, default$)
-17290 LOCAL r$
-17300 PROC_EMPTY_KEYBOARD_BUFFER
-17310 PRINT TAB(x%, y%)text$;" ";default$:PRINT TAB(x% + LEN(text$) + 1, y%);
-17320 r$ = GET$:r$ = FN_TO_UPPER(r$):IF r$ = CHR$(13) THEN r$ = default$
-17330 := r$
-17340 :
-17350 REM ::::::::::::::::::::::::::::::::::
-17360 REM :: Centered Prompt For Response ::
-17370 REM ::::::::::::::::::::::::::::::::::
-17380 DEF FN_CENTERED_PROMPT(x%, y%, text$, default$)
-17390 := FN_PROMPT(x% DIV 2 + FN_CENTER(text$), y%, text$, default$)
-17400 :
-17410 REM :::::::::::::::::::::::::::::
-17420 REM ::  Display Centered Text  ::
-17430 REM :::::::::::::::::::::::::::::
-17440 DEF PROC_CENTER(text$)
-17450 LOCAL i%, n%, l%
-17460 l% = 0
-17470 FOR i% = 1 TO LEN(text$)
-17480   IF ASC(MID$(text$, i%, 1)) >= BLANK THEN l% = l% + 1
-17490 NEXT i%
-17500 n% = FN_CENTER(STRING$(l%, CHR$(BLANK)))
-17510 i% = VPOS:VDU 31, n%, i%
-17520 FOR i% = 1 TO LEN(text$)
-17530   VDU ASC(MID$(text$, i%, 1))
-17540 NEXT i%
-17550 ENDPROC
-17560 :
-17570 REM :::::::::::::::::::::::::
-17580 REM :: Prompt For A Number ::
-17590 REM :::::::::::::::::::::::::
-17600 DEF FN_PROMPT_FOR_NUMBER(defaultValue%, maxDigitCount%)
-17610 LOCAL c$, r$
-17620 r$ = "":PROC_EMPTY_KEYBOARD_BUFFER
-17630 REPEAT
-17640   c$ = INKEY$(10)
-17650   IF ((c$ = CHR$(127) OR c$ = CHR$(8)) AND LEN(r$) > 0) THEN r$ = LEFT$(r$, LEN(r$) - 1):PRINT CHR$(127);
-17660   IF (c$ >= "0" AND c$ <= "9") AND (LEN(r$) < maxDigitCount%) THEN r$ = r$ + c$:PRINT c$;
-17670 UNTIL c$ = CHR$(13)
-17680 IF LEN(r$) < 1 THEN r$ = STR$(defaultValue%)
-17690 :=VAL(r$)
+17090 REM ::::::::::::::::::::::
+17100 REM ::   To Lowercase   ::
+17110 REM ::::::::::::::::::::::
+17120 DEF FN_TO_LOWER(ch$):LOCAL ch%:ch% = ASC(ch$):ch$ = CHR$(ch% - 32 * (ch% >= 65 AND ch% <= 90)):=ch$
+17130 :
+17140 REM :::::::::::::::::::::::::
+17150 REM :: Prompt For Response ::
+17160 REM :::::::::::::::::::::::::
+17170 DEF FN_PROMPT(x%, y%, text$, default$)
+17180 LOCAL r$
+17190 PROC_EMPTY_KEYBOARD_BUFFER
+17200 PRINT TAB(x%, y%)text$;" ";default$:PRINT TAB(x% + LEN(text$) + 1, y%);
+17210 r$ = GET$:r$ = FN_TO_UPPER(r$):IF r$ = CHR$(13) THEN r$ = default$
+17220 := r$
+17230 :
+17240 REM ::::::::::::::::::::::::::::::::::
+17250 REM :: Centered Prompt For Response ::
+17260 REM ::::::::::::::::::::::::::::::::::
+17270 DEF FN_CENTERED_PROMPT(x%, y%, text$, default$)
+17280 := FN_PROMPT(x% DIV 2 + FN_CENTER(text$), y%, text$, default$)
+17290 :
+17300 REM :::::::::::::::::::::::::::::
+17310 REM ::  Display Centered Text  ::
+17320 REM :::::::::::::::::::::::::::::
+17330 DEF PROC_CENTER(text$)
+17340 LOCAL i%, n%, l%
+17350 l% = 0
+17360 FOR i% = 1 TO LEN(text$)
+17370   IF ASC(MID$(text$, i%, 1)) >= BLANK THEN l% = l% + 1
+17380 NEXT i%
+17390 n% = FN_CENTER(STRING$(l%, CHR$(BLANK)))
+17400 i% = VPOS:VDU 31, n%, i%
+17410 FOR i% = 1 TO LEN(text$)
+17420   VDU ASC(MID$(text$, i%, 1))
+17430 NEXT i%
+17440 ENDPROC
+17450 :
+17460 REM :::::::::::::::::::::::::
+17470 REM :: Prompt For A Number ::
+17480 REM :::::::::::::::::::::::::
+17490 DEF FN_PROMPT_FOR_NUMBER(defaultValue%, maxDigitCount%)
+17500 LOCAL c$, r$
+17510 r$ = STR$(defaultValue%):PROC_EMPTY_KEYBOARD_BUFFER:PROC_SHOW_CURSOR
+17520 REPEAT
+17530   c$ = GET$
+17540   IF ((c$ = CHR$(127) OR c$ = CHR$(8)) AND LEN(r$) > 0) THEN r$ = LEFT$(r$, LEN(r$) - 1):PRINT CHR$(127);
+17550   IF (c$ >= "0" AND c$ <= "9") AND (LEN(r$) < maxDigitCount%) THEN r$ = r$ + c$:PRINT c$;
+17560 UNTIL c$ = CHR$(13) AND LEN(r$) <= maxDigitCount%
+17570 IF LEN(r$) < 1 THEN r$ = STR$(defaultValue%)
+17580 PROC_HIDE_CURSOR
+17590 := VAL(r$)
+17600 :
+17610 REM :::::::::::::::::::::::::::::::::
+17620 REM :: Enter numbers from keyboard ::
+17630 REM :::::::::::::::::::::::::::::::::
+17640 DEF FN_PROMPT_FOR_NUMBERS(x%, y%, text$, default$, maxDigitCount%)
+17650 LOCAL c$, r$
+17660 PROC_EMPTY_KEYBOARD_BUFFER
+17670 PRINT TAB(x%, y%)text$;" ";default$:PRINT TAB(x% + LEN(text$ + default$) + 1, y%);
+17680 r$ = STR$(FN_PROMPT_FOR_NUMBER(VAL(default$), maxDigitCount%))
+17690 := r$
 17700 :
 17710 REM ::::::::::::::::::::::::::::
 17720 REM :: Restore Default Colors ::
