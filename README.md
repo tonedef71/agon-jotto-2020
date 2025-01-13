@@ -21,7 +21,7 @@ Through a process of elimination, you should be able to deduce the correct lette
 
 The number of allowed guesses to solve the mystery word varies based on the length of the secret word. The minimum is five guesses.
 
-Jotto 2020 beings by prompting for the number of letters for the mystery word. You can select a mystery word as short as two letters, or as long as twelve letters.
+Jotto 2020 begins by prompting for the number of letters for the mystery word. You can select a mystery word as short as two letters, or as long as twelve letters.
 
 The game will next prompt whether or not guesses should strictly be limited to actual words: "Y" to enforce guesses to be actual words, "N" to allow any input of letters.  The traditional game of pen and paper Jotto required that guesses be legitimate five-letter words.
 
